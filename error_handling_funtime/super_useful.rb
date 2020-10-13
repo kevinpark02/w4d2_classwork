@@ -1,17 +1,32 @@
 # PHASE 2
 def convert_to_int(str)
-  Integer(str)
+  begin
+    Integer(str)
+  rescue ArgumentError => err
+    p err
+    return nil
+  end
 end
 
 # PHASE 3
 FRUITS = ["apple", "banana", "orange"]
 
 def reaction(maybe_fruit)
+  # begin
+  #   if maybe_fruit == "coffee"
+  #     puts "Thanks I love coffee, but try again"
+
+
   if FRUITS.include? maybe_fruit
     puts "OMG, thanks so much for the #{maybe_fruit}!"
-  else 
+  elsif maybe_fruit == "coffee"
+    raise ArgumentError
+  else
     raise StandardError 
   end 
+    rescue ArgumentError => err
+      puts "I love coffee, so try again"
+      feed_me_a_fruit     
 end
 
 def feed_me_a_fruit
@@ -22,12 +37,26 @@ def feed_me_a_fruit
   reaction(maybe_fruit) 
 end  
 
+class DescriptiveError < StandardError; end
+
 # PHASE 4
 class BestFriend
   def initialize(name, yrs_known, fav_pastime)
     @name = name
     @yrs_known = yrs_known
     @fav_pastime = fav_pastime
+
+    if @yrs_known < 5
+      raise DescriptiveError
+    end
+
+    if @name.length < 1 || @fav_pastime.length < 1
+      raise DescriptiveError
+    end
+
+  rescue DescriptiveError => err
+    puts "This is not a true friendship"
+
   end
 
   def talk_about_friendship
