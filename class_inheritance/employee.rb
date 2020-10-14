@@ -1,30 +1,23 @@
 class Employee
 
-    attr_reader :salary
+    attr_reader :name, :salary, :title
+    attr_accessor :boss
 
-    def initialize(name, title, salary, boss = nil)
+    def initialize(name, salary, title, boss = nil)
         @name = name
-        @title = title
         @salary = salary
+        @title = title
+        self.boss = boss
+    end
+
+    def boss=(boss)
         @boss = boss
+        boss.add_employee(self) unless boss.nil?
+
+        boss
     end
 
     def bonus(multiplier)
-        if !self.is_a?(Manager)
-            return @salary * multiplier
-        else
-            # done recursively, work through employee
-            sum = 0
-            employees.each do |employee|
-                
-                sum += employee.salary
-
-            end
-            return sum * multiplier
-        end
+        self.salary * multiplier
     end
 end
-
-#manager = Manager(....)
-
-# manager.bonus(4)
