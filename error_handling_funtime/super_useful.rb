@@ -1,62 +1,65 @@
 # PHASE 2
 def convert_to_int(str)
   begin
-    Integer(str)
+    num = Integer(str)
   rescue ArgumentError => err
-    p err
-    return nil
+    puts "Cannot convert to Integer. Please ensure you pass a valid numeric string"
+  ensure
+    num ||= 0
   end
+  num
 end
 
 # PHASE 3
 FRUITS = ["apple", "banana", "orange"]
 
+class CoffeeError < StandardError
+  def message
+    "I can't have any more caffeine. My poor ehart couldn't take it. You can try again."
+  end
+end
+
+class NotAFruitError < StandardError
+  def message
+    "That doesn't look like afruit. You tricked me. * runs away *"
+  end
+end
+
 def reaction(maybe_fruit)
-  # begin
-  #   if maybe_fruit == "coffee"
-  #     puts "Thanks I love coffee, but try again"
-
-
   if FRUITS.include? maybe_fruit
     puts "OMG, thanks so much for the #{maybe_fruit}!"
   elsif maybe_fruit == "coffee"
-    raise ArgumentError
+    raise CoffeeError
   else
-    raise StandardError 
-  end 
-    rescue ArgumentError => err
-      puts "I love coffee, so try again"
-      feed_me_a_fruit     
+    raise NotAFruitError 
+  end   
 end
 
 def feed_me_a_fruit
   puts "Hello, I am a friendly monster. :)"
 
-  puts "Feed me a fruit! (Enter the name of a fruit:)"
-  maybe_fruit = gets.chomp
-  reaction(maybe_fruit) 
+  begin
+    puts "Feed me a fruit! (Enter the name of a fruit:)"
+    maybe_fruit = gets.chomp
+    reaction(maybe_fruit)
+  rescue CoffeeError => e
+    puts e.message
+    retry
+  rescue NotAFruitError => e
+    puts e.message
+  end 
 end  
-
-class DescriptiveError < StandardError; end
 
 # PHASE 4
 class BestFriend
   def initialize(name, yrs_known, fav_pastime)
+    raise ArgumentError.new("'name' cannot be blank") if name.empty?
+    raise ArgumentError.new("'yrs_known' must be greater than or equal to 5 (best friendships take time)") if yrs_known.to_i < 5
+    raise ArgumentError.new("'fav_pastime' cannot be blank") if fav_pastime.empty?
+
     @name = name
-    @yrs_known = yrs_known
+    @yrs_known = yrs_known.to_i
     @fav_pastime = fav_pastime
-
-    if @yrs_known < 5
-      raise DescriptiveError
-    end
-
-    if @name.length < 1 || @fav_pastime.length < 1
-      raise DescriptiveError
-    end
-
-  rescue DescriptiveError => err
-    puts "This is not a true friendship"
-
   end
 
   def talk_about_friendship
