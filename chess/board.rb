@@ -7,10 +7,12 @@ class Board
     def self.populate(board)
         (0..7).each do |row|
             (0..7).each do |col|
-                if row != 0 && row != 1 && row != 6 && row != 7
-                    board[row][col] = NullPiece.instance
+                if row == 0 || row == 1
+                    board[row][col] = Piece.new("black", board, [row, col])
+                elsif row == 6 || row == 7
+                    board[row][col] = Piece.new("white", board, [row, col]) 
                 else
-                    board[row][col] = Piece.new
+                    board[row][col] = NullPiece.instance
                 end
             end
         end
@@ -41,12 +43,11 @@ class Board
             raise StandardError
         else
             @board[i][j] = @board[x][y]
+            @board[i][j].pos = [i, j]
             @board[x][y] = NullPiece.instance
         end
 
         rescue StandardError => err
             puts "This is wrong position"
     end
-
-    
 end
